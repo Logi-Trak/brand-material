@@ -20,13 +20,14 @@
 	respond /health 200
 
 	# Security headers (same as Railpack's default staticfile Caddyfile,
-	# with blob: added — this page self-bootstraps script/img/font resources
-	# via blob: URLs, which the default CSP blocks)
+	# with blob: and unsafe-eval added — this page is a Claude Design Canvas
+	# export whose dc-runtime self-bootstraps resources via blob: URLs and
+	# evals template logic with new Function(), both blocked by the default CSP)
 	header {
 		X-XSS-Protection "1; mode=block"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
-		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: https: *; style-src 'self' 'unsafe-inline' https: *; script-src 'self' 'unsafe-inline' blob: https: *; font-src 'self' data: blob: https: *; connect-src 'self' blob: https: *; media-src 'self' blob: https: *; object-src 'none'; frame-src 'self' https: *; worker-src 'self' blob:;"
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: blob: https: *; style-src 'self' 'unsafe-inline' https: *; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https: *; font-src 'self' data: blob: https: *; connect-src 'self' blob: https: *; media-src 'self' blob: https: *; object-src 'none'; frame-src 'self' https: *; worker-src 'self' blob:;"
 		-Server
 	}
 
